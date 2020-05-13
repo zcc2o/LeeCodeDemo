@@ -19,8 +19,7 @@
 double findMedianSortedArrays(int nums1[], int nums2[], int nums1Size, int nums2Size) {
     if (nums1Size > nums2Size) {
         // 始终保证nums1为短的那个
-        findMedianSortedArrays(nums2, nums1, nums2Size, nums1Size);
-        return 0;
+        return findMedianSortedArrays(nums2, nums1, nums2Size, nums1Size);
     }
     
     int n = nums1Size;
@@ -36,11 +35,21 @@ double findMedianSortedArrays(int nums1[], int nums2[], int nums1Size, int nums2
         c2 = m + n - c1;
         LMax1 = (c1 == 0) ? INT_MIN : nums1[(c1 - 1) / 2];
         RMin1 = (c1 == 2 * n) ? INT_MAX : nums1[c1 / 2];
-//        LMax2 = (c2)
+        LMax2 = (c2 == 0) ? INT_MIN : nums2[(c2 - 1) / 2];
+        RMin2 = (c2 == 2 * m) ? INT_MAX : nums2[c2 / 2];
+        if (LMax1 <= RMin2 && LMax2 <= RMin1) {
+            break;
+        }
+        
+        if (LMax1 > RMin2) { // c1 向左割
+            hi = c1 - 1;
+        } else if (LMax2 > RMin1) { // c1 向右割
+            lo = c1 + 1;
+        }
     }
-    
-    
-    return 0;
+    float result = (max(LMax1, LMax2) + min(RMin1, RMin2)) / 2.0;
+    printf("%f", result);
+    return result;
 }
 
 int main(int argc, const char * argv[]) {
@@ -51,7 +60,11 @@ int main(int argc, const char * argv[]) {
     
     int m = sizeof(nums1) / sizeof(int);
     int n = sizeof(nums2) / sizeof(int);
-    printf("%d ___ %d", m, n);
-    findMedianSortedArrays(nums1, nums2, m, n);
+//    printf("%d ___ %d", m, n);
+    double result = findMedianSortedArrays(nums1, nums2, m, n);
+    
+    printf("\n");
+    printf("%f", result);
+    printf("\n");
     return 0;
 }
